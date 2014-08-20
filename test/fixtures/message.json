@@ -36,10 +36,28 @@
       },
       {
         "message": "vires is numeris",
+        "network": "dogecointestnet",
+        "address": "nW4xHq4RzLJVjKCAv4iZcLHrvayoxvGdM5",
+        "signature": "IDZTjXtQM2DpDigBNQoMIFpK3K3VfVczQbjbjtMCXyAx+Sw74bs3cGdixFJSDkrBp0i4KMH28JlIlSR9P395cH0="
+       },
+      {
+        "message": "vires is numeris",
+        "network": "litecointestnet",
+        "address": "mhA8QdQ3pvK3G7ZxNN3LS4P8RYVUiyQ2E5",
+        "signature": "H+rzjQ1clxWUyh7SXfK847rCfKUbesfZoMBtvBtmHVcbvnKv63GDMNjqnbO6sXNvVoEhdcDkRjY38D1ct2aWK/I="
+        },
+      {
+        "message": "vires is numeris",
         "network": "darkcoin",
         "address": "Xv1oVfRdbo6EuzuJFxgy8QKd2wVMbujRMm",
         "signature": "H2PSpuQ0lW66NokAf0cKiRWQ4N28Ylr5TpI5sGF4mCt3RtX31KZ9c9/yEoA5hJSEbGslMAMSawcsoRg8RsLX4/s="
-      }
+      },
+      {
+        "message": "vires is numeris",
+        "network": "darkcointestnet",
+        "address": "mxRBysPeZh9fukzfQqLAoHE19DjsSAdZqG",
+        "signature": "IHpXeDVn9NZWYSC/LU0QhFFsx50HPBrI5aTKqthtqR+pFTXi/fyhXnrPpENTdcC31hAaVRDY9I4T2XKoFnUEVlA="
+       }
     ],
     "signing": [
       {

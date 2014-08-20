@@ -29,6 +29,20 @@ var networks = {
     feePerKb: 100000000, // https://github.com/dogecoin/dogecoin/blob/v1.7.1/src/main.cpp#L58
     estimateFee: estimateFee('dogecoin')
   },
+  dogecointestnet: {
+      magicPrefix: '\x19Dogecoin Signed Message:\n',
+      bip32: {
+        public: 0x02facafd,
+        private: 0x02fac398
+      },
+      pubKeyHash: 0x71,
+      scriptHash: 0x16,
+      wif: 0x9e,
+      dustThreshold: 0, // https://github.com/dogecoin/dogecoin/blob/v1.7.1/src/core.h#L155-L160
+      dustSoftThreshold: 100000000, // https://github.com/dogecoin/dogecoin/blob/v1.7.1/src/main.h#L62
+      feePerKb: 100000000, // https://github.com/dogecoin/dogecoin/blob/v1.7.1/src/main.cpp#L58
+      estimateFee: estimateFee('dogecoin')
+    },
   litecoin: {
     magicPrefix: '\x19Litecoin Signed Message:\n',
     bip32: {
@@ -43,6 +57,20 @@ var networks = {
     feePerKb: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.cpp#L56
     estimateFee: estimateFee('litecoin')
   },
+  litecointestnet: {
+      magicPrefix: '\x19Litecoin Signed Message:\n',
+      bip32: {
+        public: 0x019da462,
+        private: 0x019d9cfe
+      },
+      pubKeyHash: 0x6f,
+      scriptHash: 0x05,
+      wif: 0xb0,
+      dustThreshold: 0, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.cpp#L360-L365
+      dustSoftThreshold: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.h#L53
+      feePerKb: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.cpp#L56
+      estimateFee: estimateFee('litecoin')
+    },
   darkcoin: {
       magicPrefix: '\x19DarkCoin Signed Message:\n',
       bip32: {
@@ -56,7 +84,21 @@ var networks = {
       dustSoftThreshold: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.h#L53
       feePerKb: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.cpp#L56
       estimateFee: estimateFee('darkcoin')
-    },
+  },
+  darkcointestnet: {
+      magicPrefix: '\x19DarkCoin Signed Message:\n',
+      bip32: {
+        public: 0x019da462,
+        private: 0x019d9cfe
+      },
+      pubKeyHash: 0x6f,
+      scriptHash: 0x05,
+      wif: 0xb0,
+      dustThreshold: 0, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.cpp#L360-L365
+      dustSoftThreshold: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.h#L53
+      feePerKb: 100000, // https://github.com/litecoin-project/litecoin/blob/v0.8.7.2/src/main.cpp#L56
+      estimateFee: estimateFee('darkcoin')
+  },
   testnet: {
     magicPrefix: '\x18Bitcoin Signed Message:\n',
     bip32: {
