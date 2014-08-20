@@ -1,7 +1,5 @@
 module.exports = {
   Address: require('./address'),
-  base58: require('./base58'),
-  base58check: require('./base58check'),
   bufferutils: require('./bufferutils'),
   convert: require('./convert'),
   crypto: require('./crypto'),
@@ -15,6 +13,7 @@ module.exports = {
   Script: require('./script'),
   scripts: require('./scripts'),
   Transaction: require('./transaction'),
+  TransactionBuilder: require('./transaction_builder'),
   networks: require('./networks'),
   Wallet: require('./wallet')
 }

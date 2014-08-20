@@ -5,7 +5,6 @@ var opcodes = require('./opcodes')
 var scripts = require('./scripts')
 
 var Address = require('./address')
-var ECKey = require('./eckey')
 var ECSignature = require('./ecsignature')
 var Script = require('./script')
 
@@ -54,6 +53,7 @@ Transaction.prototype.addInput = function(tx, index, sequence) {
   assert.equal(hash.length, 32, 'Expected hash length of 32, got ' + hash.length)
   assert.equal(typeof index, 'number', 'Expected number index, got ' + index)
 
+  // Add the input and return the input's index
   return (this.ins.push({
     hash: hash,
     index: index,
@@ -79,14 +79,16 @@ Transaction.prototype.addOutput = function(scriptPubKey, value) {
 
   // Attempt to get a valid script if it's an Address object
   if (scriptPubKey instanceof Address) {
-    var address = scriptPubKey
-
-    scriptPubKey = address.toOutputScript()
+    scriptPubKey = scriptPubKey.toOutputScript()
   }
 
+  assert(scriptPubKey instanceof Script, 'Expected Address or Script, got ' + scriptPubKey)
+  assert.equal(typeof value, 'number', 'Expected number value, got ' + value)
+
+  // Add the output and return the output's index
   return (this.outs.push({
     script: scriptPubKey,
-    value: value,
+    value: value
   }) - 1)
 }
 
@@ -160,7 +162,17 @@ Transaction.prototype.toHex = function() {
  * hashType, serializes and finally hashes the result. This hash can then be
  * used to sign the transaction input in question.
  */
-Transaction.prototype.hashForSignature = function(prevOutScript, inIndex, hashType) {
+Transaction.prototype.hashForSignature = function(inIndex, prevOutScript, hashType) {
+  // FIXME: remove in 2.x.y
+  if (arguments[0] instanceof Script) {
+    console.warn('hashForSignature(prevOutScript, inIndex, ...) has been deprecated. Use hashForSignature(inIndex, prevOutScript, ...)')
+
+    // swap the arguments (must be stored in tmp, arguments is special)
+    var tmp = arguments[0]
+    inIndex = arguments[1]
+    prevOutScript = tmp
+  }
+
   assert(inIndex >= 0, 'Invalid vin index')
   assert(inIndex < this.ins.length, 'Invalid vin index')
   assert(prevOutScript instanceof Script, 'Invalid Script object')
@@ -294,35 +306,39 @@ Transaction.fromHex = function(hex) {
   return Transaction.fromBuffer(new Buffer(hex, 'hex'))
 }
 
-/**
- * Signs a pubKeyHash output at some index with the given key
- */
+Transaction.prototype.setInputScript = function(index, script) {
+  this.ins[index].script = script
+}
+
+// FIXME: remove in 2.x.y
 Transaction.prototype.sign = function(index, privKey, hashType) {
+  console.warn("Transaction.prototype.sign is deprecated.  Use TransactionBuilder instead.")
+
   var prevOutScript = privKey.pub.getAddress().toOutputScript()
   var signature = this.signInput(index, prevOutScript, privKey, hashType)
 
-  // FIXME: Assumed prior TX was pay-to-pubkey-hash
   var scriptSig = scripts.pubKeyHashInput(signature, privKey.pub)
   this.setInputScript(index, scriptSig)
 }
 
+// FIXME: remove in 2.x.y
 Transaction.prototype.signInput = function(index, prevOutScript, privKey, hashType) {
+  console.warn("Transaction.prototype.signInput is deprecated.  Use TransactionBuilder instead.")
+
   hashType = hashType || Transaction.SIGHASH_ALL
 
-  var hash = this.hashForSignature(prevOutScript, index, hashType)
+  var hash = this.hashForSignature(index, prevOutScript, hashType)
   var signature = privKey.sign(hash)
 
   return signature.toScriptSignature(hashType)
 }
 
-Transaction.prototype.setInputScript = function(index, script) {
-  this.ins[index].script = script
-}
-
-// FIXME: could be validateInput(index, prevTxOut, pub)
+// FIXME: remove in 2.x.y
 Transaction.prototype.validateInput = function(index, prevOutScript, pubKey, buffer) {
+  console.warn("Transaction.prototype.validateInput is deprecated.  Use TransactionBuilder instead.")
+
   var parsed = ECSignature.parseScriptSignature(buffer)
-  var hash = this.hashForSignature(prevOutScript, index, parsed.hashType)
+  var hash = this.hashForSignature(index, prevOutScript, parsed.hashType)
 
   return pubKey.verify(hash, parsed.signature)
 }

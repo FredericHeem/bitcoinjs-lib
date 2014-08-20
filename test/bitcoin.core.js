@@ -1,11 +1,12 @@
 var assert = require('assert')
-var base58 = require('../src/base58')
-var base58check = require('../src/base58check')
+var base58 = require('bs58')
+var base58check = require('bs58check')
 var networks = require('../src/networks')
 
 var Address = require('../src/address')
 var BigInteger = require('bigi')
 var ECKey = require('../src/eckey')
+var ECSignature = require('../src/ecsignature')
 var Transaction = require('../src/transaction')
 var Script = require('../src/script')
 
@@ -182,7 +183,7 @@ describe('Bitcoin-core', function() {
 
         var actualHash
         try {
-          actualHash = transaction.hashForSignature(script, inIndex, hashType)
+          actualHash = transaction.hashForSignature(inIndex, script, hashType)
         } catch (e) {
           // don't fail if we don't support it yet, TODO
           if (!e.message.match(/not yet supported/)) throw e
@@ -194,6 +195,34 @@ describe('Bitcoin-core', function() {
 
           assert.equal(actualHash.toString('hex'), expectedHash)
         }
+      })
+    })
+  })
+
+  describe('ECSignature', function() {
+    sig_canonical.forEach(function(hex) {
+      var buffer = new Buffer(hex, 'hex')
+
+      it('can parse ' + hex, function() {
+        var parsed = ECSignature.parseScriptSignature(buffer)
+        var actual = parsed.signature.toScriptSignature(parsed.hashType)
+        assert.equal(actual.toString('hex'), hex)
+      })
+    })
+
+    sig_noncanonical.forEach(function(hex, i) {
+      if (i === 0) return
+      if (i % 2 !== 0) return
+
+      var description = sig_noncanonical[i - 1].slice(0, -1)
+      if (description === 'too long') return // we support non secp256k1 signatures
+
+      var buffer = new Buffer(hex, 'hex')
+
+      it('throws on ' + description, function() {
+        assert.throws(function() {
+          ECSignature.parseScriptSignature(buffer)
+        })
       })
     })
   })

@@ -1,5 +1,5 @@
 var assert = require('assert')
-var base58check = require('./base58check')
+var base58check = require('bs58check')
 var crypto = require('./crypto')
 var networks = require('./networks')
 
@@ -31,6 +31,7 @@ function HDNode(K, chainCode, network) {
   network = network || networks.bitcoin
 
   assert(Buffer.isBuffer(chainCode), 'Expected Buffer, got ' + chainCode)
+  assert.equal(chainCode.length, 32, 'Expected chainCode length of 32, got ' + chainCode.length)
   assert(network.bip32, 'Unknown BIP32 constants for network')
 
   this.chainCode = chainCode
@@ -51,6 +52,10 @@ HDNode.HIGHEST_BIT = 0x80000000
 HDNode.LENGTH = 78
 
 HDNode.fromSeedBuffer = function(seed, network) {
+  assert(Buffer.isBuffer(seed), 'Expected Buffer, got ' + seed)
+  assert(seed.length >= 16, 'Seed should be at least 128 bits')
+  assert(seed.length <= 64, 'Seed should be at most 512 bits')
+
   var I = crypto.HmacSHA512(seed, HDNode.MASTER_SECRET)
   var IL = I.slice(0, 32)
   var IR = I.slice(32)
@@ -138,12 +143,27 @@ HDNode.prototype.getAddress = function() {
   return this.pubKey.getAddress(this.network)
 }
 
+HDNode.prototype.neutered = function() {
+  var neutered = new HDNode(this.pubKey.Q, this.chainCode, this.network)
+  neutered.depth = this.depth
+  neutered.index = this.index
+  neutered.parentFingerprint = this.parentFingerprint
+
+  return neutered
+}
+
 HDNode.prototype.toBase58 = function(isPrivate) {
   return base58check.encode(this.toBuffer(isPrivate))
 }
 
 HDNode.prototype.toBuffer = function(isPrivate) {
-  if (isPrivate == undefined) isPrivate = !!this.privKey
+  if (isPrivate == undefined) {
+    isPrivate = !!this.privKey
+
+  // FIXME: remove in 2.x.y
+  } else {
+    console.warn('isPrivate flag is deprecated, please use the .neutered() method instead')
+  }
 
   // Version
   var version = isPrivate ? this.network.bip32.private : this.network.bip32.public
@@ -169,6 +189,7 @@ HDNode.prototype.toBuffer = function(isPrivate) {
 
   // 33 bytes: the public key or private key data
   if (isPrivate) {
+    // FIXME: remove in 2.x.y
     assert(this.privKey, 'Missing private key')
 
     // 0x00 + k for private keys
