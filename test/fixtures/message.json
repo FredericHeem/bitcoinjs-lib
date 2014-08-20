@@ -33,6 +33,12 @@
         "network": "dogecoin",
         "address": "DFpN6QqFfUm3gKNaxN6tNcab1FArL9cZLE",
         "signature": "H6k+dZwJ8oOei3PCSpdj603fDvhlhQ+sqaFNIDvo/bI+Xh6zyIKGzZpyud6YhZ1a5mcrwMVtTWL+VXq/hC5Zj7s="
+      },
+      {
+        "message": "vires is numeris",
+        "network": "darkcoin",
+        "address": "Xv1oVfRdbo6EuzuJFxgy8QKd2wVMbujRMm",
+        "signature": "H2PSpuQ0lW66NokAf0cKiRWQ4N28Ylr5TpI5sGF4mCt3RtX31KZ9c9/yEoA5hJSEbGslMAMSawcsoRg8RsLX4/s="
       }
     ],
     "signing": [
